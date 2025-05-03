@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora Penal - FiveM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e1e;
+      color: white;
+      padding: 20px;
+    }
+    .crime {
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculadora Penal - FiveM</h1>
+
+  <div class="crime">
+    <label><input type="checkbox" data-tempo="20" data-multa="5000"> Homicídio - 20 meses - R$5000</label>
+  </div>
+  <div class="crime">
+    <label><input type="checkbox" data-tempo="10" data-multa="3000"> Roubo a banco - 10 meses - R$3000</label>
+  </div>
+  <div class="crime">
+    <label><input type="checkbox" data-tempo="5" data-multa="1000"> Porte ilegal de arma - 5 meses - R$1000</label>
+  </div>
+  <div class="crime">
+    <label><input type="checkbox" data-tempo="3" data-multa="800"> Fuga da polícia - 3 meses - R$800</label>
+  </div>
+
+  <button onclick="calcularPena()">Calcular Pena</button>
+
+  <div class="resultado" id="resultado">
+    Tempo total: 0 meses<br>
+    Multa total: R$0
+  </div>
+
+  <script>
+    function calcularPena() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      let tempoTotal = 0;
+      let multaTotal = 0;
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          tempoTotal += parseInt(cb.getAttribute('data-tempo'));
+          multaTotal += parseInt(cb.getAttribute('data-multa'));
+        }
+      });
+
+      document.getElementById('resultado').innerHTML = `
+        Tempo total: ${tempoTotal} meses<br>
+        Multa total: R$${multaTotal.toLocaleString()}
+      `;
+    }
+  </script>
+
+</body>
+</html>
