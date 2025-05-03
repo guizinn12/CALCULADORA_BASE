@@ -1,0 +1,289 @@
+[
+  {
+    "id": "violent",
+    "name": "Crimes Violentos",
+    "icon": "fas fa-fist-raised",
+    "crimes": [
+      {
+        "id": "v1",
+        "name": "Homicídio",
+        "time": 20,
+        "fine": 5000,
+        "description": "Causar a morte de outro ser humano intencionalmente."
+      },
+      {
+        "id": "v2",
+        "name": "Homicídio Culposo",
+        "time": 10,
+        "fine": 3000,
+        "description": "Causar a morte de outro ser humano sem intenção."
+      },
+      {
+        "id": "v3",
+        "name": "Tentativa de Homicídio",
+        "time": 15,
+        "fine": 4000,
+        "description": "Tentar matar alguém, mas não conseguir."
+      },
+      {
+        "id": "v4",
+        "name": "Agressão",
+        "time": 5,
+        "fine": 1500,
+        "description": "Atacar fisicamente outra pessoa causando ferimentos."
+      },
+      {
+        "id": "v5",
+        "name": "Agressão Agravada",
+        "time": 8,
+        "fine": 2500,
+        "description": "Agressão com uso de arma ou causando lesões graves."
+      },
+      {
+        "id": "v6",
+        "name": "Sequestro",
+        "time": 12,
+        "fine": 3500,
+        "description": "Confinar ou transportar alguém contra sua vontade."
+      },
+      {
+        "id": "v7",
+        "name": "Tortura",
+        "time": 15,
+        "fine": 4500,
+        "description": "Causar dor ou sofrimento intenso a outra pessoa."
+      }
+    ]
+  },
+  {
+    "id": "property",
+    "name": "Crimes Contra a Propriedade",
+    "icon": "fas fa-mask",
+    "crimes": [
+      {
+        "id": "p1",
+        "name": "Roubo a Banco",
+        "time": 10,
+        "fine": 3000,
+        "description": "Subtração de valores de instituição bancária mediante violência ou ameaça."
+      },
+      {
+        "id": "p2",
+        "name": "Roubo a Loja",
+        "time": 7,
+        "fine": 2000,
+        "description": "Subtração de bens de estabelecimento comercial mediante violência ou ameaça."
+      },
+      {
+        "id": "p3",
+        "name": "Furto",
+        "time": 4,
+        "fine": 1000,
+        "description": "Subtração de bens alheios sem violência ou ameaça."
+      },
+      {
+        "id": "p4",
+        "name": "Arrombamento",
+        "time": 6,
+        "fine": 1800,
+        "description": "Entrada forçada em propriedade alheia."
+      },
+      {
+        "id": "p5",
+        "name": "Invasão de Propriedade",
+        "time": 3,
+        "fine": 800,
+        "description": "Entrar em propriedade alheia sem autorização."
+      },
+      {
+        "id": "p6",
+        "name": "Vandalismo",
+        "time": 4,
+        "fine": 1200,
+        "description": "Destruir ou danificar propriedade alheia."
+      },
+      {
+        "id": "p7",
+        "name": "Incêndio Criminoso",
+        "time": 9,
+        "fine": 2700,
+        "description": "Causar incêndio com intenção criminosa."
+      }
+    ]
+  },
+  {
+    "id": "traffic",
+    "name": "Crimes de Trânsito",
+    "icon": "fas fa-car",
+    "crimes": [
+      {
+        "id": "t1",
+        "name": "Fuga da Polícia",
+        "time": 3,
+        "fine": 800,
+        "description": "Não parar o veículo quando ordenado por autoridade policial."
+      },
+      {
+        "id": "t2",
+        "name": "Direção Perigosa",
+        "time": 2,
+        "fine": 600,
+        "description": "Conduzir veículo de maneira arriscada, colocando em perigo outras pessoas."
+      },
+      {
+        "id": "t3",
+        "name": "Dirigir Embriagado",
+        "time": 4,
+        "fine": 1200,
+        "description": "Conduzir veículo sob efeito de álcool ou drogas."
+      },
+      {
+        "id": "t4",
+        "name": "Excesso de Velocidade",
+        "time": 1,
+        "fine": 400,
+        "description": "Dirigir acima do limite de velocidade permitido."
+      },
+      {
+        "id": "t5",
+        "name": "Roubo de Veículo",
+        "time": 6,
+        "fine": 1500,
+        "description": "Subtração de veículo alheio mediante violência ou ameaça."
+      },
+      {
+        "id": "t6",
+        "name": "Furto de Veículo",
+        "time": 4,
+        "fine": 1000,
+        "description": "Subtração de veículo alheio sem violência ou ameaça."
+      }
+    ]
+  },
+  {
+    "id": "drugs",
+    "name": "Crimes Relacionados a Drogas",
+    "icon": "fas fa-pills",
+    "crimes": [
+      {
+        "id": "d1",
+        "name": "Posse de Drogas",
+        "time": 2,
+        "fine": 500,
+        "description": "Portar substâncias ilícitas para uso pessoal."
+      },
+      {
+        "id": "d2",
+        "name": "Tráfico de Drogas",
+        "time": 8,
+        "fine": 2500,
+        "description": "Vender, transportar ou distribuir substâncias ilícitas."
+      },
+      {
+        "id": "d3",
+        "name": "Produção de Drogas",
+        "time": 10,
+        "fine": 3000,
+        "description": "Cultivar ou fabricar substâncias ilícitas."
+      },
+      {
+        "id": "d4",
+        "name": "Consumo Público de Drogas",
+        "time": 1,
+        "fine": 300,
+        "description": "Usar substâncias ilícitas em local público."
+      }
+    ]
+  },
+  {
+    "id": "weapons",
+    "name": "Crimes Relacionados a Armas",
+    "icon": "fas fa-bomb",
+    "crimes": [
+      {
+        "id": "w1",
+        "name": "Porte Ilegal de Arma",
+        "time": 5,
+        "fine": 1000,
+        "description": "Portar arma sem autorização legal."
+      },
+      {
+        "id": "w2",
+        "name": "Porte de Arma Modificada",
+        "time": 7,
+        "fine": 1500,
+        "description": "Portar arma com modificações ilegais (silenciador, gatilho automático, etc)."
+      },
+      {
+        "id": "w3",
+        "name": "Disparo de Arma em Via Pública",
+        "time": 4,
+        "fine": 900,
+        "description": "Efetuar disparos em locais públicos."
+      },
+      {
+        "id": "w4",
+        "name": "Posse de Explosivos",
+        "time": 8,
+        "fine": 2000,
+        "description": "Possuir explosivos sem autorização legal."
+      },
+      {
+        "id": "w5",
+        "name": "Tráfico de Armas",
+        "time": 12,
+        "fine": 3500,
+        "description": "Vender ou transportar armas ilegalmente."
+      }
+    ]
+  },
+  {
+    "id": "public",
+    "name": "Crimes Contra a Ordem Pública",
+    "icon": "fas fa-bullhorn",
+    "crimes": [
+      {
+        "id": "o1",
+        "name": "Desacato à Autoridade",
+        "time": 2,
+        "fine": 500,
+        "description": "Desrespeitar ou desafiar policiais ou outros agentes públicos."
+      },
+      {
+        "id": "o2",
+        "name": "Resistência à Prisão",
+        "time": 3,
+        "fine": 700,
+        "description": "Resistir à prisão ou à ordem de um policial."
+      },
+      {
+        "id": "o3",
+        "name": "Falsidade Ideológica",
+        "time": 4,
+        "fine": 1000,
+        "description": "Mentir sobre a própria identidade para autoridades."
+      },
+      {
+        "id": "o4",
+        "name": "Suborno",
+        "time": 5,
+        "fine": 1500,
+        "description": "Oferecer dinheiro ou favores a funcionários públicos para obter vantagens."
+      },
+      {
+        "id": "o5",
+        "name": "Formação de Quadrilha",
+        "time": 7,
+        "fine": 2000,
+        "description": "Associar-se com três ou mais pessoas para cometer crimes."
+      },
+      {
+        "id": "o6",
+        "name": "Falsificação de Documentos",
+        "time": 4,
+        "fine": 1200,
+        "description": "Produzir ou alterar documentos de maneira fraudulenta."
+      }
+    ]
+  }
+]

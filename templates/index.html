@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h2>Sistema Penal FiveM</h2>
+        <p>Calcule penas e multas para diferentes crimes no seu servidor de roleplay</p>
+    </div>
+</div>
+
+<div class="badge-section">
+    <div class="badge-image"></div>
+</div>
+
+<div class="calculator-title">
+    <h2>Calculadora Penal</h2>
+    <p>Selecione os crimes cometidos para calcular o tempo total de prisão e multa</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div id="crimes-list" class="crimes-section">
+            <div class="text-center p-5">
+                <i class="fas fa-spinner fa-spin fa-3x"></i>
+                <p class="mt-3">Carregando lista de crimes...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div id="results-section" class="results-section">
+            <h3 class="results-title">
+                <i class="fas fa-calculator"></i> Resultado
+            </h3>
+            
+            <div class="results-content">
+                <div class="result-card">
+                    <h4>Tempo de Prisão</h4>
+                    <div id="time-value" class="result-value time-value">0 meses</div>
+                </div>
+                
+                <div class="result-card">
+                    <h4>Valor da Multa</h4>
+                    <div id="fine-value" class="result-value fine-value">R$0</div>
+                </div>
+                
+                <div class="result-card">
+                    <h4>Crimes Selecionados</h4>
+                    <div id="crime-count-value" class="result-value crime-count-value">0</div>
+                </div>
+            </div>
+            
+            <div>
+                <h4>Crimes Selecionados:</h4>
+                <div id="selected-crimes">
+                    <p>Nenhum crime selecionado</p>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="calculate-btn" class="btn btn-calculate">
+                    <i class="fas fa-calculator"></i> Calcular Pena
+                </button>
+                <button id="reset-btn" class="btn btn-reset">
+                    <i class="fas fa-trash"></i> Limpar Seleção
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="law-enforcement-imagery">
+    <div class="law-image law-image-1"></div>
+    <div class="law-image law-image-2"></div>
+</div>
+
+<div class="crime-scene-image"></div>
+{% endblock %}
