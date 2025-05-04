@@ -263,14 +263,9 @@
         });
     });
     
-    // Override the calculateTotals function to update the chart
-    const originalCalculateTotals = window.calculateTotals;
-    window.calculateTotals = function() {
-        if (originalCalculateTotals) {
-            originalCalculateTotals();
-        }
-        
-        // Update chart with new values
+    // Get current calculateTotals function reference if it exists
+    if (typeof window.calculateTotals === 'function') {
+        // Update chart with new values when calculateTotals is called
         const timeValue = parseInt(document.getElementById('time-value').textContent);
         const fineValue = parseInt(document.getElementById('fine-value').textContent.replace('R$', '').replace(/\./g, '').replace(/,/g, ''));
         
@@ -278,7 +273,7 @@
             window.penaltyChart.data.datasets[0].data = [timeValue, fineValue/1000]; // Scale down fine values to be comparable with time
             window.penaltyChart.update();
         }
-    };
+    }
 </script>
 {% endblock %}
 
