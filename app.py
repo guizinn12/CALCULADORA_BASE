@@ -43,6 +43,58 @@ def load_config_data():
 def save_config_data(config):
     with open('static/data/config.json', 'w', encoding='utf-8') as file:
         json.dump(config, file, indent=2)
+        
+# Função para validar uma URL de imagem
+def is_valid_image_url(url):
+    if not url or url.strip() == '' or url.strip() == '#':
+        return False
+        
+    # Verifica se a URL tem formato válido
+    try:
+        parsed = urllib.parse.urlparse(url)
+        if not all([parsed.scheme, parsed.netloc]):
+            return False
+            
+        # Extensões de imagem comuns
+        image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp']
+        path_lower = parsed.path.lower()
+        
+        # Verifica se termina com uma extensão de imagem ou é uma URL de uma API de imagem conhecida
+        is_image_ext = any(path_lower.endswith(ext) for ext in image_extensions)
+        is_image_service = any(service in parsed.netloc for service in ['imgur.com', 'cloudinary.com', 'imgbb.com', 'postimg.cc'])
+        
+        if not (is_image_ext or is_image_service):
+            # Para URLs sem extensão clara, podemos tentar verificar os cabeçalhos
+            try:
+                # Timeout curto para não atrasar a página
+                response = requests.head(url, timeout=2)
+                content_type = response.headers.get('content-type', '')
+                return content_type.startswith('image/')
+            except:
+                # Se não conseguir verificar, assume que não é uma imagem
+                return False
+                
+        return True
+    except:
+        return False
+        
+# Formata uma URL para garantir que seja válida
+def format_image_url(url):
+    if not url or url.strip() == '':
+        return ''
+        
+    # Remove espaços em branco
+    url = url.strip()
+    
+    # Adiciona protocolo se estiver faltando
+    if url and not url.startswith(('http://', 'https://')):
+        url = 'https://' + url
+        
+    # Verifica se é uma URL válida
+    if is_valid_image_url(url):
+        return url
+    else:
+        return ''
 
 @app.route('/')
 def index():
@@ -78,7 +130,7 @@ def update_config():
         
         # Update city settings
         config['city']['name'] = data.get('city_name', config['city']['name'])
-        config['city']['logo'] = data.get('city_logo', config['city']['logo'])
+        config['city']['logo'] = format_image_url(data.get('city_logo', config['city']['logo']))
         config['city']['description'] = data.get('city_description', config['city']['description'])
         
         # Update theme colors
@@ -118,7 +170,7 @@ def list_cities():
 def add_city():
     if request.method == 'POST':
         name = request.form.get('name')
-        logo_url = request.form.get('logo_url')
+        logo_url = format_image_url(request.form.get('logo_url', ''))
         description = request.form.get('description')
         
         city = City(name=name, logo_url=logo_url, description=description)
@@ -151,7 +203,7 @@ def edit_city(city_id):
     
     if request.method == 'POST':
         city.name = request.form.get('name')
-        city.logo_url = request.form.get('logo_url')
+        city.logo_url = format_image_url(request.form.get('logo_url', ''))
         city.description = request.form.get('description')
         
         # Atualiza a configuração
