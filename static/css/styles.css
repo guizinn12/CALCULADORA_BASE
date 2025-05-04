@@ -1,46 +1,100 @@
 :root {
-    --primary-color: #2c3e50;
-    --secondary-color: #34495e;
-    --accent-color: #3498db;
-    --danger-color: #e74c3c;
-    --success-color: #2ecc71;
-    --warning-color: #f39c12;
-    --text-color: #ecf0f1;
-    --dark-bg: #1a1a1a;
-    --card-bg: #2d2d2d;
-    --border-color: #444;
+    --primary-color: #1e3a8a;
+    --secondary-color: #172554;
+    --accent-color: #3b82f6;
+    --accent-hover: #2563eb;
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+    --warning-color: #f59e0b;
+    --text-color: #f1f5f9;
+    --dark-bg: #0f172a;
+    --card-bg: #1e293b;
+    --border-color: #334155;
+    --neon-glow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
 }
 
 body {
-    font-family: 'Roboto', Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     background-color: var(--dark-bg);
     color: var(--text-color);
     line-height: 1.6;
     margin: 0;
     padding: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e3a8a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-.header {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 20px 0;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+.navbar {
+    background-color: var(--secondary-color);
+    padding: 15px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+.navbar-brand {
     display: flex;
     align-items: center;
-    justify-content: center;
+    font-weight: 700;
 }
 
-.header i {
-    margin-right: 15px;
+.brand-icon {
+    margin-right: 10px;
     color: var(--warning-color);
+    font-size: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+.brand-text {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, var(--accent-color), var(--warning-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.nav-link {
+    color: var(--text-color);
+    margin: 0 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-link.active {
+    color: var(--accent-color);
+}
+
+.nav-link.active::after {
+    width: 100%;
 }
 
 .main-container {
@@ -51,37 +105,92 @@ body {
 
 .hero-section {
     position: relative;
-    height: 250px;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1624968683033-c31c672453e2');
+    height: 350px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(23, 37, 84, 0.8)), url('https://images.unsplash.com/photo-1624968683033-c31c672453e2');
     background-size: cover;
     background-position: center;
-    margin-bottom: 30px;
-    border-radius: 8px;
+    margin-bottom: 40px;
+    border-radius: 12px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.8), transparent);
 }
 
 .hero-content {
     z-index: 1;
     padding: 20px;
     max-width: 800px;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-content h2 {
-    font-size: 2.2rem;
-    margin-bottom: 15px;
+    font-size: 3rem;
+    margin-bottom: 20px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    background: linear-gradient(90deg, var(--accent-color), var(--warning-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 .hero-content p {
-    font-size: 1.2rem;
-    color: #ddd;
+    font-size: 1.4rem;
+    color: var(--text-color);
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.hero-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    background-color: var(--warning-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.hero-badge i {
+    font-size: 40px;
+    color: white;
 }
 
 .crimes-section {
@@ -288,11 +397,71 @@ body {
 }
 
 .footer {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: var(--text-color);
+    padding: 40px 0 20px;
+    margin-top: 60px;
+    border-top: 1px solid var(--border-color);
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-color), 
+        var(--warning-color), 
+        transparent);
+}
+
+.footer h5 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.footer h5 i {
+    margin-right: 10px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.footer-links a i {
+    margin-right: 10px;
+    width: 20px;
     text-align: center;
-    padding: 20px;
-    margin-top: 20px;
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+}
+
+.footer hr {
+    border-color: var(--border-color);
+    margin: 20px 0;
 }
 
 .crime-description {
@@ -373,12 +542,146 @@ body {
 
 .crime-scene-image {
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1605806616949-1e87b487fc2f');
-    height: 250px;
+    height: 300px;
     background-size: cover;
     background-position: center;
+    border-radius: 12px;
+    margin: 50px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.info-overlay {
+    background-color: rgba(15, 23, 42, 0.85);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 80%;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    text-align: center;
+}
+
+.info-overlay h3 {
+    margin-top: 0;
+    color: var(--warning-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.info-overlay h3 i {
+    margin-right: 10px;
+}
+
+.info-overlay p {
+    color: var(--text-color);
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--warning-color));
+}
+
+.stat-card i {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+}
+
+.stat-count {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    color: var(--text-color);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.search-container {
+    margin-top: 20px;
+}
+
+.search-container .input-group-text {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--accent-color);
+}
+
+.search-container .form-control {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+    padding: 12px;
+}
+
+.search-container .form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+    border-color: var(--accent-color);
+}
+
+.search-container .btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.search-container .btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#chart-container {
+    background-color: rgba(0, 0, 0, 0.2);
     border-radius: 8px;
-    margin: 30px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
 }
 
 #selected-crimes {

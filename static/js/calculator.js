@@ -10,12 +10,46 @@ document.addEventListener('DOMContentLoaded', function() {
     let crimeData = [];
     let selectedCrimes = [];
     
+    // Add typing animation to hero section
+    const heroTitle = document.querySelector('.hero-content h2');
+    if (heroTitle) {
+        const originalText = heroTitle.innerText;
+        heroTitle.innerText = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < originalText.length) {
+                heroTitle.innerHTML += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 500);
+    }
+    
     // Fetch crimes data
     fetch('/crimes')
         .then(response => response.json())
         .then(data => {
             crimeData = data;
             renderCrimeCategories(data);
+            
+            // Update crime counts in stats
+            const totalCrimes = document.getElementById('totalCrimes');
+            const totalCategories = document.getElementById('totalCategories');
+            
+            if (totalCrimes) {
+                let count = 0;
+                data.forEach(category => {
+                    count += category.crimes.length;
+                });
+                totalCrimes.innerText = count;
+            }
+            
+            if (totalCategories) {
+                totalCategories.innerText = data.length;
+            }
         })
         .catch(error => {
             console.error('Error fetching crimes data:', error);
@@ -196,22 +230,54 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Reset button
     resetBtn.addEventListener('click', function() {
-        // Uncheck all checkboxes
-        document.querySelectorAll('.crime-checkbox').forEach(checkbox => {
-            checkbox.checked = false;
-            const crimeElement = document.getElementById(`crime-${checkbox.dataset.id}`);
-            if (crimeElement) {
-                crimeElement.classList.remove('selected');
+        Swal.fire({
+            title: 'Limpar seleção?',
+            text: 'Todos os crimes selecionados serão removidos.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#3b82f6',
+            confirmButtonText: 'Sim, limpar',
+            cancelButtonText: 'Cancelar',
+            background: '#1e293b',
+            color: '#f1f5f9'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Uncheck all checkboxes
+                document.querySelectorAll('.crime-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                    const crimeElement = document.getElementById(`crime-${checkbox.dataset.id}`);
+                    if (crimeElement) {
+                        crimeElement.classList.remove('selected');
+                    }
+                });
+                
+                // Clear selected crimes
+                selectedCrimes = [];
+                updateSelectedCrimesList();
+                
+                // Reset totals
+                timeValue.textContent = '0 meses';
+                fineValue.textContent = 'R$0';
+                crimeCountValue.textContent = '0';
+                
+                // Reset chart if exists
+                if (window.penaltyChart) {
+                    window.penaltyChart.data.datasets[0].data = [0, 0];
+                    window.penaltyChart.update();
+                }
+                
+                // Show success message
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Seleção limpa com sucesso',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    background: '#1e293b',
+                    color: '#f1f5f9'
+                });
             }
         });
-        
-        // Clear selected crimes
-        selectedCrimes = [];
-        updateSelectedCrimesList();
-        
-        // Reset totals
-        timeValue.textContent = '0 meses';
-        fineValue.textContent = 'R$0';
-        crimeCountValue.textContent = '0';
     });
 });

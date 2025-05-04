@@ -2,23 +2,61 @@
 
 {% block content %}
 <div class="hero-section">
-    <div class="hero-content">
+    <div class="hero-content animate__animated animate__fadeIn">
         <h2>Sistema Penal FiveM</h2>
-        <p>Calcule penas e multas para diferentes crimes no seu servidor de roleplay</p>
+        <p>Calcule penas e multas para diferentes crimes no seu servidor de roleplay com precisão e eficiência</p>
+        <button class="btn btn-primary mt-4" onclick="scrollToCalculator()">
+            <i class="fas fa-calculator"></i> Iniciar Cálculo
+        </button>
+    </div>
+    <div class="hero-badge">
+        <i class="fas fa-gavel"></i>
     </div>
 </div>
 
-<div class="badge-section">
-    <div class="badge-image"></div>
+<div class="container">
+    <div class="row stats-counter mb-5">
+        <div class="col-md-4">
+            <div class="stat-card animate__animated animate__fadeInUp">
+                <i class="fas fa-balance-scale"></i>
+                <div class="stat-count" id="totalCrimes">42</div>
+                <div class="stat-label">Crimes Catalogados</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <i class="fas fa-list-ul"></i>
+                <div class="stat-count" id="totalCategories">6</div>
+                <div class="stat-label">Categorias</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                <i class="fas fa-users"></i>
+                <div class="stat-count" id="usersCount">500+</div>
+                <div class="stat-label">Usuários Ativos</div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="calculator-title">
+<div id="calculator-section" class="calculator-title animate__animated animate__fadeIn">
     <h2>Calculadora Penal</h2>
     <p>Selecione os crimes cometidos para calcular o tempo total de prisão e multa</p>
 </div>
 
 <div class="row">
     <div class="col-md-8">
+        <div class="search-container mb-4">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="search-crimes" class="form-control" placeholder="Buscar crimes pelo nome...">
+                <button class="btn btn-outline-secondary" type="button" id="clear-search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
         <div id="crimes-list" class="crimes-section">
             <div class="text-center p-5">
                 <i class="fas fa-spinner fa-spin fa-3x"></i>
@@ -50,6 +88,10 @@
                 </div>
             </div>
             
+            <div id="chart-container" class="mt-4 mb-4">
+                <canvas id="penaltyChart" width="100%" height="200"></canvas>
+            </div>
+            
             <div>
                 <h4>Crimes Selecionados:</h4>
                 <div id="selected-crimes">
@@ -65,6 +107,12 @@
                     <i class="fas fa-trash"></i> Limpar Seleção
                 </button>
             </div>
+            
+            <div class="mt-3">
+                <button id="share-btn" class="btn btn-primary w-100">
+                    <i class="fas fa-share-alt"></i> Compartilhar Resultado
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -74,5 +122,164 @@
     <div class="law-image law-image-2"></div>
 </div>
 
-<div class="crime-scene-image"></div>
+<div class="crime-scene-image">
+    <div class="info-overlay">
+        <h3><i class="fas fa-info-circle"></i> Informações Importantes</h3>
+        <p>Esta calculadora serve como referência para o sistema penal do servidor FiveM. Os valores podem ser ajustados pela administração e estão sujeitos a agravantes e atenuantes durante o julgamento.</p>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    function scrollToCalculator() {
+        document.getElementById('calculator-section').scrollIntoView({ 
+            behavior: 'smooth' 
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize chart (will be populated when calculating)
+        const ctx = document.getElementById('penaltyChart').getContext('2d');
+        window.penaltyChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tempo (meses)', 'Multa (R$)'],
+                datasets: [{
+                    data: [0, 0],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(245, 158, 11, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(245, 158, 11, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#f1f5f9'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribuição da Pena',
+                        color: '#f1f5f9'
+                    }
+                }
+            }
+        });
+        
+        // Search functionality
+        const searchInput = document.getElementById('search-crimes');
+        const clearSearch = document.getElementById('clear-search');
+        
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const crimeItems = document.querySelectorAll('.crime-item');
+            
+            crimeItems.forEach(item => {
+                const crimeName = item.querySelector('.crime-name').textContent.toLowerCase();
+                const crimeDesc = item.querySelector('.crime-description').textContent.toLowerCase();
+                
+                if (crimeName.includes(searchTerm) || crimeDesc.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Show/hide categories based on visible crimes
+            const categories = document.querySelectorAll('.category-card');
+            categories.forEach(cat => {
+                const visibleCrimes = cat.querySelectorAll('.crime-item[style="display: block;"]').length;
+                const allHidden = cat.querySelectorAll('.crime-item[style="display: none;"]').length === cat.querySelectorAll('.crime-item').length;
+                
+                if (allHidden) {
+                    cat.style.display = 'none';
+                } else {
+                    cat.style.display = 'block';
+                }
+            });
+        });
+        
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            const crimeItems = document.querySelectorAll('.crime-item');
+            const categories = document.querySelectorAll('.category-card');
+            
+            crimeItems.forEach(item => {
+                item.style.display = 'block';
+            });
+            
+            categories.forEach(cat => {
+                cat.style.display = 'block';
+            });
+        });
+        
+        // Share button
+        document.getElementById('share-btn').addEventListener('click', function() {
+            if (selectedCrimes.length === 0) {
+                Swal.fire({
+                    title: 'Nenhum crime selecionado',
+                    text: 'Selecione pelo menos um crime para compartilhar o resultado.',
+                    icon: 'warning',
+                    background: '#1e293b',
+                    color: '#f1f5f9'
+                });
+                return;
+            }
+            
+            const totalTime = document.getElementById('time-value').textContent;
+            const totalFine = document.getElementById('fine-value').textContent;
+            const crimeCount = selectedCrimes.length;
+            
+            const shareText = `🚨 Calculadora Penal FiveM 🚨\n\nCrimes: ${crimeCount}\nTempo Total: ${totalTime}\nMulta Total: ${totalFine}\n\nUse nossa calculadora: ${window.location.href}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Calculadora Penal FiveM',
+                    text: shareText
+                });
+            } else {
+                // Fallback for browsers that don't support the Web Share API
+                Swal.fire({
+                    title: 'Compartilhar Resultado',
+                    html: `<textarea class="form-control bg-dark text-light" rows="6" readonly>${shareText}</textarea>`,
+                    confirmButtonText: 'Copiar e Fechar',
+                    background: '#1e293b',
+                    color: '#f1f5f9',
+                    preConfirm: () => {
+                        navigator.clipboard.writeText(shareText);
+                        return true;
+                    }
+                });
+            }
+        });
+    });
+    
+    // Override the calculateTotals function to update the chart
+    const originalCalculateTotals = window.calculateTotals;
+    window.calculateTotals = function() {
+        if (originalCalculateTotals) {
+            originalCalculateTotals();
+        }
+        
+        // Update chart with new values
+        const timeValue = parseInt(document.getElementById('time-value').textContent);
+        const fineValue = parseInt(document.getElementById('fine-value').textContent.replace('R$', '').replace(/\./g, '').replace(/,/g, ''));
+        
+        if (window.penaltyChart) {
+            window.penaltyChart.data.datasets[0].data = [timeValue, fineValue/1000]; // Scale down fine values to be comparable with time
+            window.penaltyChart.update();
+        }
+    };
+</script>
+{% endblock %}
+
 {% endblock %}
