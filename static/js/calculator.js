@@ -10,6 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let crimeData = [];
     let selectedCrimes = [];
     
+    // Verificar se os elementos existem
+    const elementsExist = crimesList && selectedCrimesList && calcBtn && 
+                         resetBtn && timeValue && fineValue && crimeCountValue;
+    
+    // Se estamos na página de administração, alguns elementos não existirão
+    const isAdminPage = window.location.pathname.includes('/admin');
+    
     // Add typing animation to hero section
     const heroTitle = document.querySelector('.hero-content h2');
     if (heroTitle) {
@@ -28,38 +35,42 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(typeWriter, 500);
     }
     
-    // Fetch crimes data
-    fetch('/crimes')
-        .then(response => response.json())
-        .then(data => {
-            crimeData = data;
-            renderCrimeCategories(data);
-            
-            // Update crime counts in stats
-            const totalCrimes = document.getElementById('totalCrimes');
-            const totalCategories = document.getElementById('totalCategories');
-            
-            if (totalCrimes) {
-                let count = 0;
-                data.forEach(category => {
-                    count += category.crimes.length;
-                });
-                totalCrimes.innerText = count;
-            }
-            
-            if (totalCategories) {
-                totalCategories.innerText = data.length;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching crimes data:', error);
-            document.getElementById('crimes-list').innerHTML = `
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle"></i> 
-                    Error loading crimes data. Please refresh the page and try again.
-                </div>
-            `;
-        });
+    // Fetch crimes data, apenas se estivermos na página principal 
+    if (!isAdminPage && crimesList) {
+        fetch('/crimes')
+            .then(response => response.json())
+            .then(data => {
+                crimeData = data;
+                renderCrimeCategories(data);
+                
+                // Update crime counts in stats
+                const totalCrimes = document.getElementById('totalCrimes');
+                const totalCategories = document.getElementById('totalCategories');
+                
+                if (totalCrimes) {
+                    let count = 0;
+                    data.forEach(category => {
+                        count += category.crimes.length;
+                    });
+                    totalCrimes.innerText = count;
+                }
+                
+                if (totalCategories) {
+                    totalCategories.innerText = data.length;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching crimes data:', error);
+                if (crimesList) {
+                    crimesList.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Error loading crimes data. Please refresh the page and try again.
+                        </div>
+                    `;
+                }
+            });
+    }
     
     // Render crime categories
     function renderCrimeCategories(categories) {
@@ -212,24 +223,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Calculate button
-    calcBtn.addEventListener('click', function() {
-        calculateTotals();
-        
-        // Scroll to results section
-        document.getElementById('results-section').scrollIntoView({
-            behavior: 'smooth'
+    if (elementsExist && !isAdminPage) {
+        calcBtn.addEventListener('click', function() {
+            calculateTotals();
+            
+            // Scroll to results section
+            document.getElementById('results-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Flash animation
+            const resultsSection = document.getElementById('results-section');
+            resultsSection.style.backgroundColor = '#2c3e50';
+            setTimeout(() => {
+                resultsSection.style.backgroundColor = '#2d2d2d';
+            }, 300);
         });
         
-        // Flash animation
-        const resultsSection = document.getElementById('results-section');
-        resultsSection.style.backgroundColor = '#2c3e50';
-        setTimeout(() => {
-            resultsSection.style.backgroundColor = '#2d2d2d';
-        }, 300);
-    });
-    
-    // Reset button
-    resetBtn.addEventListener('click', function() {
+        // Reset button
+        resetBtn.addEventListener('click', function() {
         Swal.fire({
             title: 'Limpar seleção?',
             text: 'Todos os crimes selecionados serão removidos.',
@@ -280,4 +292,5 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    }
 });
