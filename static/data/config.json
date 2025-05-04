@@ -1,0 +1,32 @@
+{
+  "city": {
+    "name": "Los Santos",
+    "logo": "https://via.placeholder.com/150x150.png?text=LS",
+    "description": "Calculadora Penal Oficial de Los Santos"
+  },
+  "theme": {
+    "primary_color": "#1e3a8a",
+    "secondary_color": "#172554",
+    "accent_color": "#3b82f6",
+    "danger_color": "#ef4444",
+    "success_color": "#22c55e",
+    "warning_color": "#f59e0b",
+    "text_color": "#f1f5f9",
+    "dark_bg": "#0f172a",
+    "card_bg": "#1e293b",
+    "border_color": "#334155"
+  },
+  "images": {
+    "hero_background": "https://images.unsplash.com/photo-1624968683033-c31c672453e2",
+    "police_badge": "https://images.unsplash.com/photo-1570541510210-02630d54258b",
+    "law_image_1": "https://images.unsplash.com/photo-1588853200055-69f55237d105",
+    "law_image_2": "https://images.unsplash.com/photo-1617906855223-a69f14c9841d",
+    "crime_scene": "https://images.unsplash.com/photo-1605806616949-1e87b487fc2f"
+  },
+  "server": {
+    "name": "FiveM RP Server",
+    "discord_url": "https://discord.gg/example",
+    "website_url": "https://example.com",
+    "instagram_url": "https://instagram.com/example"
+  }
+}

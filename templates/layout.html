@@ -3,17 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Penal - FiveM</title>
+    <title>{{ config.city.name | default('Calculadora Penal - FiveM') }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <!-- Custom Theme Colors -->
+    <style>
+        :root {
+            --primary-color: {{ config.theme.primary_color | default('#1e3a8a') }};
+            --secondary-color: {{ config.theme.secondary_color | default('#172554') }};
+            --accent-color: {{ config.theme.accent_color | default('#3b82f6') }};
+            --accent-hover: {{ config.theme.accent_color | default('#3b82f6') }};
+            --danger-color: {{ config.theme.danger_color | default('#ef4444') }};
+            --success-color: {{ config.theme.success_color | default('#22c55e') }};
+            --warning-color: {{ config.theme.warning_color | default('#f59e0b') }};
+            --text-color: {{ config.theme.text_color | default('#f1f5f9') }};
+            --dark-bg: {{ config.theme.dark_bg | default('#0f172a') }};
+            --card-bg: {{ config.theme.card_bg | default('#1e293b') }};
+            --border-color: {{ config.theme.border_color | default('#334155') }};
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/"><i class="fas fa-balance-scale brand-icon"></i> <span class="brand-text">FIVEM PENAL CODE</span></a>
+            <a class="navbar-brand" href="/">
+                {% if config and config.city and config.city.logo %}
+                <img src="{{ config.city.logo }}" alt="{{ config.city.name }}" class="city-logo">
+                {% else %}
+                <i class="fas fa-balance-scale brand-icon"></i>
+                {% endif %}
+                <span class="brand-text">
+                    {% if config and config.city and config.city.name %}
+                    {{ config.city.name | upper }} PENAL CODE
+                    {% else %}
+                    FIVEM PENAL CODE
+                    {% endif %}
+                </span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -28,6 +58,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> Sobre</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin') }}"><i class="fas fa-cog"></i> Admin</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -41,15 +74,46 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-balance-scale"></i> FiveM Penal Code</h5>
-                    <p>Ferramenta oficial para cálculo de penas e multas no servidor de roleplay.</p>
+                    <h5>
+                        {% if config and config.city and config.city.logo %}
+                        <img src="{{ config.city.logo }}" alt="{{ config.city.name }}" class="footer-logo">
+                        {% else %}
+                        <i class="fas fa-balance-scale"></i>
+                        {% endif %}
+                        {% if config and config.city and config.city.name %}
+                        {{ config.city.name }} Penal Code
+                        {% else %}
+                        FiveM Penal Code
+                        {% endif %}
+                    </h5>
+                    <p>
+                        {% if config and config.city and config.city.description %}
+                        {{ config.city.description }}
+                        {% else %}
+                        Ferramenta oficial para cálculo de penas e multas no servidor de roleplay.
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="col-md-4">
                     <h5><i class="fas fa-link"></i> Links Úteis</h5>
                     <ul class="footer-links">
+                        {% if config and config.server and config.server.discord_url %}
+                        <li><a href="{{ config.server.discord_url }}" target="_blank"><i class="fab fa-discord"></i> Discord do Servidor</a></li>
+                        {% else %}
                         <li><a href="#"><i class="fab fa-discord"></i> Discord do Servidor</a></li>
+                        {% endif %}
+                        
+                        {% if config and config.server and config.server.website_url %}
+                        <li><a href="{{ config.server.website_url }}" target="_blank"><i class="fas fa-globe"></i> Site Oficial</a></li>
+                        {% else %}
                         <li><a href="#"><i class="fas fa-globe"></i> Site Oficial</a></li>
+                        {% endif %}
+                        
+                        {% if config and config.server and config.server.instagram_url %}
+                        <li><a href="{{ config.server.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        {% else %}
                         <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 <div class="col-md-4">
@@ -58,7 +122,14 @@
                 </div>
             </div>
             <hr>
-            <p class="text-center">Calculadora Penal FiveM &copy; 2025 - Para uso em roleplay</p>
+            <p class="text-center">
+                {% if config and config.server and config.server.name %}
+                {{ config.server.name }}
+                {% else %}
+                Calculadora Penal FiveM
+                {% endif %}
+                &copy; 2025 - Para uso em roleplay
+            </p>
         </div>
     </footer>
 

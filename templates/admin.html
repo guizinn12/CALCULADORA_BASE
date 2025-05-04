@@ -1,0 +1,330 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Painel de Administração</h1>
+    <p>Personalize a aparência e as informações da calculadora</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="admin-sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#city-settings" data-bs-toggle="tab">
+                        <i class="fas fa-city"></i> Configurações da Cidade
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#theme-settings" data-bs-toggle="tab">
+                        <i class="fas fa-palette"></i> Tema e Cores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#server-settings" data-bs-toggle="tab">
+                        <i class="fas fa-server"></i> Servidor e Links
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#preview" data-bs-toggle="tab">
+                        <i class="fas fa-eye"></i> Visualização
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        {% if request.args.get('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> Configurações atualizadas com sucesso!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        
+        {% if request.args.get('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> Erro ao atualizar configurações: {{ request.args.get('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        
+        <form action="{{ url_for('update_config') }}" method="post" class="admin-form">
+            <div class="tab-content">
+                <!-- City Settings -->
+                <div class="tab-pane fade show active" id="city-settings">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-city"></i> Configurações da Cidade</h3>
+                        
+                        <div class="mb-4">
+                            <label for="city_name" class="form-label">Nome da Cidade</label>
+                            <input type="text" class="form-control" id="city_name" name="city_name" 
+                                   value="{{ config.city.name }}" required>
+                            <div class="form-text">Nome da cidade que aparecerá no título e descrições</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="city_logo" class="form-label">URL do Logo da Cidade</label>
+                            <input type="url" class="form-control" id="city_logo" name="city_logo" 
+                                   value="{{ config.city.logo }}">
+                            <div class="form-text">URL da imagem do logo da cidade (recomendado: formato quadrado)</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="city_description" class="form-label">Descrição da Cidade</label>
+                            <textarea class="form-control" id="city_description" name="city_description" 
+                                      rows="3">{{ config.city.description }}</textarea>
+                            <div class="form-text">Breve descrição que aparecerá no cabeçalho da página</div>
+                        </div>
+                        
+                        <div class="mb-4 text-center">
+                            <div class="city-logo-preview">
+                                <img src="{{ config.city.logo }}" alt="{{ config.city.name }}" id="logo-preview">
+                            </div>
+                            <p class="preview-title" id="city-name-preview">{{ config.city.name }}</p>
+                            <p class="preview-desc" id="city-desc-preview">{{ config.city.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Theme Settings -->
+                <div class="tab-pane fade" id="theme-settings">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-palette"></i> Tema e Cores</h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="primary_color" class="form-label">Cor Primária</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="primary_color" name="primary_color" 
+                                               value="{{ config.theme.primary_color }}">
+                                        <input type="text" class="form-control" id="primary_color_text" 
+                                               value="{{ config.theme.primary_color }}">
+                                    </div>
+                                    <div class="form-text">Cor principal do tema (cabeçalho, rodapé)</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="secondary_color" class="form-label">Cor Secundária</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="secondary_color" name="secondary_color" 
+                                               value="{{ config.theme.secondary_color }}">
+                                        <input type="text" class="form-control" id="secondary_color_text" 
+                                               value="{{ config.theme.secondary_color }}">
+                                    </div>
+                                    <div class="form-text">Cor secundária para fundos e elementos adicionais</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="accent_color" class="form-label">Cor de Destaque</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="accent_color" name="accent_color" 
+                                               value="{{ config.theme.accent_color }}">
+                                        <input type="text" class="form-control" id="accent_color_text" 
+                                               value="{{ config.theme.accent_color }}">
+                                    </div>
+                                    <div class="form-text">Cor de destaque para botões e elementos interativos</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="success_color" class="form-label">Cor de Sucesso</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="success_color" name="success_color" 
+                                               value="{{ config.theme.success_color }}">
+                                        <input type="text" class="form-control" id="success_color_text" 
+                                               value="{{ config.theme.success_color }}">
+                                    </div>
+                                    <div class="form-text">Cor para mensagens e botões de sucesso</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="warning_color" class="form-label">Cor de Alerta</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="warning_color" name="warning_color" 
+                                               value="{{ config.theme.warning_color }}">
+                                        <input type="text" class="form-control" id="warning_color_text" 
+                                               value="{{ config.theme.warning_color }}">
+                                    </div>
+                                    <div class="form-text">Cor para mensagens e elementos de alerta</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="danger_color" class="form-label">Cor de Perigo</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="danger_color" name="danger_color" 
+                                               value="{{ config.theme.danger_color }}">
+                                        <input type="text" class="form-control" id="danger_color_text" 
+                                               value="{{ config.theme.danger_color }}">
+                                    </div>
+                                    <div class="form-text">Cor para botões de exclusão e mensagens de erro</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-preview">
+                            <h4>Visualização do Tema</h4>
+                            <div class="theme-preview-container">
+                                <div class="preview-header" id="preview-header"></div>
+                                <div class="preview-content">
+                                    <div class="preview-card" id="preview-card">
+                                        <h5>Título do Card</h5>
+                                        <p>Conteúdo de exemplo</p>
+                                    </div>
+                                    <div class="preview-buttons">
+                                        <button class="btn preview-btn-primary" id="preview-btn-primary">Botão Primário</button>
+                                        <button class="btn preview-btn-success" id="preview-btn-success">Sucesso</button>
+                                        <button class="btn preview-btn-warning" id="preview-btn-warning">Alerta</button>
+                                        <button class="btn preview-btn-danger" id="preview-btn-danger">Perigo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Server Settings -->
+                <div class="tab-pane fade" id="server-settings">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-server"></i> Servidor e Links</h3>
+                        
+                        <div class="mb-4">
+                            <label for="server_name" class="form-label">Nome do Servidor</label>
+                            <input type="text" class="form-control" id="server_name" name="server_name" 
+                                   value="{{ config.server.name }}">
+                            <div class="form-text">Nome do servidor FiveM que aparecerá no rodapé</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="discord_url" class="form-label">Link do Discord</label>
+                            <input type="url" class="form-control" id="discord_url" name="discord_url" 
+                                   value="{{ config.server.discord_url }}">
+                            <div class="form-text">URL do servidor Discord</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="website_url" class="form-label">Link do Site Oficial</label>
+                            <input type="url" class="form-control" id="website_url" name="website_url" 
+                                   value="{{ config.server.website_url }}">
+                            <div class="form-text">URL do site oficial do servidor</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="instagram_url" class="form-label">Link do Instagram</label>
+                            <input type="url" class="form-control" id="instagram_url" name="instagram_url" 
+                                   value="{{ config.server.instagram_url }}">
+                            <div class="form-text">URL do Instagram do servidor</div>
+                        </div>
+                        
+                        <div class="server-links-preview">
+                            <h4>Visualização dos Links</h4>
+                            <div class="preview-links">
+                                <a href="#" class="preview-link" id="preview-discord">
+                                    <i class="fab fa-discord"></i> Discord
+                                </a>
+                                <a href="#" class="preview-link" id="preview-website">
+                                    <i class="fas fa-globe"></i> Site Oficial
+                                </a>
+                                <a href="#" class="preview-link" id="preview-instagram">
+                                    <i class="fab fa-instagram"></i> Instagram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preview Tab -->
+                <div class="tab-pane fade" id="preview">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-eye"></i> Visualização</h3>
+                        
+                        <div class="preview-iframe-container">
+                            <iframe src="{{ url_for('index') }}" width="100%" height="600" id="preview-iframe"></iframe>
+                        </div>
+                        
+                        <div class="mt-4 text-center">
+                            <p class="text-muted">Esta é uma prévia de como a calculadora penal ficará. Para ver as mudanças aplicadas, salve as configurações primeiro.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar para Calculadora
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // City settings live preview
+        const cityName = document.getElementById('city_name');
+        const cityDesc = document.getElementById('city_description');
+        const cityLogo = document.getElementById('city_logo');
+        const cityNamePreview = document.getElementById('city-name-preview');
+        const cityDescPreview = document.getElementById('city-desc-preview');
+        const logoPreview = document.getElementById('logo-preview');
+        
+        cityName.addEventListener('input', function() {
+            cityNamePreview.textContent = this.value;
+        });
+        
+        cityDesc.addEventListener('input', function() {
+            cityDescPreview.textContent = this.value;
+        });
+        
+        cityLogo.addEventListener('input', function() {
+            logoPreview.src = this.value;
+        });
+        
+        // Theme color live preview
+        const colorInputs = [
+            { input: 'primary_color', text: 'primary_color_text', preview: 'preview-header', property: 'backgroundColor' },
+            { input: 'secondary_color', text: 'secondary_color_text', preview: 'preview-card', property: 'backgroundColor' },
+            { input: 'accent_color', text: 'accent_color_text', preview: 'preview-btn-primary', property: 'backgroundColor' },
+            { input: 'success_color', text: 'success_color_text', preview: 'preview-btn-success', property: 'backgroundColor' },
+            { input: 'warning_color', text: 'warning_color_text', preview: 'preview-btn-warning', property: 'backgroundColor' },
+            { input: 'danger_color', text: 'danger_color_text', preview: 'preview-btn-danger', property: 'backgroundColor' }
+        ];
+        
+        colorInputs.forEach(item => {
+            const colorInput = document.getElementById(item.input);
+            const textInput = document.getElementById(item.text);
+            const previewElem = document.getElementById(item.preview);
+            
+            // Update text input when color picker changes
+            colorInput.addEventListener('input', function() {
+                textInput.value = this.value;
+                previewElem.style[item.property] = this.value;
+            });
+            
+            // Update color picker when text input changes
+            textInput.addEventListener('input', function() {
+                if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                    colorInput.value = this.value;
+                    previewElem.style[item.property] = this.value;
+                }
+            });
+            
+            // Initialize preview
+            previewElem.style[item.property] = colorInput.value;
+        });
+        
+        // Refresh preview iframe when switching to preview tab
+        document.querySelector('a[href="#preview"]').addEventListener('click', function() {
+            const iframe = document.getElementById('preview-iframe');
+            iframe.src = iframe.src;
+        });
+    });
+</script>
+{% endblock %}
