@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Gerenciador de Cidades</h1>
+    <p>Crie e personalize calculadoras para diferentes cidades</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="city-actions">
+            <a href="{{ url_for('add_city') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nova Cidade
+            </a>
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                <i class="fas fa-cog"></i> Painel Admin
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Voltar para Calculadora
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if cities %}
+<div class="row">
+    {% for city in cities %}
+    <div class="col-md-4 mb-4">
+        <div class="city-card">
+            <div class="city-card-header">
+                {% if city.logo_url %}
+                <img src="{{ city.logo_url }}" alt="{{ city.name }}" class="city-logo-large">
+                {% else %}
+                <div class="city-logo-placeholder">
+                    <i class="fas fa-city"></i>
+                </div>
+                {% endif %}
+                <h3>{{ city.name }}</h3>
+                <p class="city-description">{{ city.description }}</p>
+            </div>
+            
+            <div class="city-card-body">
+                <div class="city-stats">
+                    <div class="city-stat">
+                        <span class="stat-label">Criado em</span>
+                        <span class="stat-value">{{ city.created_at.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                    <div class="city-stat">
+                        <span class="stat-label">Atualizado em</span>
+                        <span class="stat-value">{{ city.updated_at.strftime('%d/%m/%Y') }}</span>
+                    </div>
+                </div>
+                
+                {% if city.configs %}
+                <div class="city-theme-preview">
+                    <div class="theme-sample" style="background-color: {{ city.configs[0].primary_color }}"></div>
+                    <div class="theme-sample" style="background-color: {{ city.configs[0].secondary_color }}"></div>
+                    <div class="theme-sample" style="background-color: {{ city.configs[0].accent_color }}"></div>
+                    <div class="theme-sample" style="background-color: {{ city.configs[0].warning_color }}"></div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="city-card-actions">
+                <a href="{{ url_for('edit_city', city_id=city.id) }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="{{ url_for('export_city_html', city_id=city.id) }}" class="btn btn-success">
+                    <i class="fas fa-download"></i> Exportar
+                </a>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ city.id }}">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de confirmação de exclusão -->
+    <div class="modal fade" id="deleteModal{{ city.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir a cidade <strong>{{ city.name }}</strong>? Esta ação não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{{ url_for('delete_city', city_id=city.id) }}" method="post">
+                        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i> Nenhuma cidade cadastrada ainda. Clique em "Nova Cidade" para começar!
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializa tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

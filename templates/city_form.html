@@ -1,0 +1,440 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>{{ 'Editar Cidade' if city else 'Nova Cidade' }}</h1>
+    <p>{{ 'Modifique as configurações para ' + city.name if city else 'Adicione uma nova cidade e personalize suas configurações' }}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="admin-sidebar">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#city-info" data-bs-toggle="tab">
+                        <i class="fas fa-city"></i> Informações da Cidade
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#theme-settings" data-bs-toggle="tab">
+                        <i class="fas fa-palette"></i> Tema e Cores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#server-links" data-bs-toggle="tab">
+                        <i class="fas fa-link"></i> Links do Servidor
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#preview" data-bs-toggle="tab">
+                        <i class="fas fa-eye"></i> Visualização
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <form method="post" class="admin-form">
+            <div class="tab-content">
+                <!-- City Info Tab -->
+                <div class="tab-pane fade show active" id="city-info">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-city"></i> Informações da Cidade</h3>
+                        
+                        <div class="mb-4">
+                            <label for="name" class="form-label">Nome da Cidade</label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{ city.name if city else '' }}" required>
+                            <div class="form-text">Nome da cidade que aparecerá em toda a calculadora</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="logo_url" class="form-label">URL do Logo</label>
+                            <input type="url" class="form-control" id="logo_url" name="logo_url" 
+                                   value="{{ city.logo_url if city else '' }}" placeholder="https://exemplo.com/logo.png">
+                            <div class="form-text">URL de uma imagem para o logo da cidade (recomendado: formato quadrado)</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ city.description if city else '' }}</textarea>
+                            <div class="form-text">Breve descrição da cidade ou do sistema penal</div>
+                        </div>
+                        
+                        <div class="mb-4 text-center">
+                            <div class="city-logo-preview">
+                                <img src="{{ city.logo_url if city and city.logo_url else 'https://via.placeholder.com/150x150?text=Logo' }}" alt="Logo Preview" id="logo-preview">
+                            </div>
+                            <p class="preview-title" id="city-name-preview">{{ city.name if city else 'Nome da Cidade' }}</p>
+                            <p class="preview-desc" id="city-desc-preview">{{ city.description if city else 'Descrição da cidade...' }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Theme Settings Tab -->
+                <div class="tab-pane fade" id="theme-settings">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-palette"></i> Tema e Cores</h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="primary_color" class="form-label">Cor Primária</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="primary_color" name="primary_color" 
+                                               value="{{ city_config.primary_color if city_config else '#1e3a8a' }}">
+                                        <input type="text" class="form-control" id="primary_color_text" 
+                                               value="{{ city_config.primary_color if city_config else '#1e3a8a' }}">
+                                    </div>
+                                    <div class="form-text">Cor principal do tema (cabeçalho, rodapé)</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="secondary_color" class="form-label">Cor Secundária</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="secondary_color" name="secondary_color" 
+                                               value="{{ city_config.secondary_color if city_config else '#172554' }}">
+                                        <input type="text" class="form-control" id="secondary_color_text" 
+                                               value="{{ city_config.secondary_color if city_config else '#172554' }}">
+                                    </div>
+                                    <div class="form-text">Cor secundária para fundos e elementos adicionais</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="accent_color" class="form-label">Cor de Destaque</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="accent_color" name="accent_color" 
+                                               value="{{ city_config.accent_color if city_config else '#3b82f6' }}">
+                                        <input type="text" class="form-control" id="accent_color_text" 
+                                               value="{{ city_config.accent_color if city_config else '#3b82f6' }}">
+                                    </div>
+                                    <div class="form-text">Cor de destaque para botões e elementos interativos</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="success_color" class="form-label">Cor de Sucesso</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="success_color" name="success_color" 
+                                               value="{{ city_config.success_color if city_config else '#22c55e' }}">
+                                        <input type="text" class="form-control" id="success_color_text" 
+                                               value="{{ city_config.success_color if city_config else '#22c55e' }}">
+                                    </div>
+                                    <div class="form-text">Cor para mensagens e botões de sucesso</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="warning_color" class="form-label">Cor de Alerta</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="warning_color" name="warning_color" 
+                                               value="{{ city_config.warning_color if city_config else '#f59e0b' }}">
+                                        <input type="text" class="form-control" id="warning_color_text" 
+                                               value="{{ city_config.warning_color if city_config else '#f59e0b' }}">
+                                    </div>
+                                    <div class="form-text">Cor para mensagens e elementos de alerta</div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="danger_color" class="form-label">Cor de Perigo</label>
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="danger_color" name="danger_color" 
+                                               value="{{ city_config.danger_color if city_config else '#ef4444' }}">
+                                        <input type="text" class="form-control" id="danger_color_text" 
+                                               value="{{ city_config.danger_color if city_config else '#ef4444' }}">
+                                    </div>
+                                    <div class="form-text">Cor para botões de exclusão e mensagens de erro</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="theme-preview">
+                            <h4>Visualização do Tema</h4>
+                            <div class="theme-preview-container">
+                                <div class="preview-header" id="preview-header"></div>
+                                <div class="preview-content">
+                                    <div class="preview-card" id="preview-card">
+                                        <h5>Exemplo de Card</h5>
+                                        <p>Conteúdo de demonstração</p>
+                                    </div>
+                                    <div class="preview-buttons">
+                                        <button type="button" class="btn preview-btn-primary" id="preview-btn-primary">Botão Primário</button>
+                                        <button type="button" class="btn preview-btn-success" id="preview-btn-success">Sucesso</button>
+                                        <button type="button" class="btn preview-btn-warning" id="preview-btn-warning">Alerta</button>
+                                        <button type="button" class="btn preview-btn-danger" id="preview-btn-danger">Perigo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Server Links Tab -->
+                <div class="tab-pane fade" id="server-links">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-link"></i> Links do Servidor</h3>
+                        
+                        <div class="mb-4">
+                            <label for="server_name" class="form-label">Nome do Servidor</label>
+                            <input type="text" class="form-control" id="server_name" name="server_name" 
+                                   value="{{ city_config.server_name if city_config else '' }}">
+                            <div class="form-text">Nome do servidor FiveM a ser exibido no rodapé</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="discord_url" class="form-label">Link do Discord</label>
+                            <input type="url" class="form-control" id="discord_url" name="discord_url" 
+                                   value="{{ city_config.discord_url if city_config else '' }}" placeholder="https://discord.gg/servidor">
+                            <div class="form-text">URL do servidor Discord</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="website_url" class="form-label">Link do Site Oficial</label>
+                            <input type="url" class="form-control" id="website_url" name="website_url" 
+                                   value="{{ city_config.website_url if city_config else '' }}" placeholder="https://exemplo.com">
+                            <div class="form-text">URL do site oficial do servidor</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="instagram_url" class="form-label">Link do Instagram</label>
+                            <input type="url" class="form-control" id="instagram_url" name="instagram_url" 
+                                   value="{{ city_config.instagram_url if city_config else '' }}" placeholder="https://instagram.com/servidor">
+                            <div class="form-text">URL do Instagram do servidor</div>
+                        </div>
+                        
+                        <div class="server-links-preview">
+                            <h4>Visualização dos Links</h4>
+                            <div class="preview-links">
+                                <a href="#" class="preview-link" id="preview-discord">
+                                    <i class="fab fa-discord"></i> Discord
+                                </a>
+                                <a href="#" class="preview-link" id="preview-website">
+                                    <i class="fas fa-globe"></i> Site Oficial
+                                </a>
+                                <a href="#" class="preview-link" id="preview-instagram">
+                                    <i class="fab fa-instagram"></i> Instagram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preview Tab -->
+                <div class="tab-pane fade" id="preview">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-eye"></i> Previsão da Calculadora</h3>
+                        
+                        <p class="text-center mb-4">Veja como ficará a calculadora com as configurações atuais:</p>
+                        
+                        <div class="preview-frame-container">
+                            <div class="preview-frame">
+                                <div class="preview-navbar" id="preview-navbar">
+                                    <div class="preview-brand">
+                                        <div class="preview-logo" id="preview-city-logo"></div>
+                                        <span id="preview-city-name">{{ city.name if city else 'Nome da Cidade' }}</span>
+                                    </div>
+                                    <div class="preview-nav">
+                                        <span class="preview-nav-item active">Calculadora</span>
+                                        <span class="preview-nav-item">Código Penal</span>
+                                        <span class="preview-nav-item">Sobre</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="preview-body">
+                                    <div class="preview-hero" id="preview-hero">
+                                        <h2>Calculadora Penal</h2>
+                                        <p>{{ city.description if city else 'Descrição da cidade...' }}</p>
+                                    </div>
+                                    
+                                    <div class="preview-calculator">
+                                        <div class="preview-crimes">
+                                            <div class="preview-category">
+                                                <h4>Crimes Violentos</h4>
+                                                <div class="preview-crime-item">
+                                                    <input type="checkbox" checked>
+                                                    <span>Homicídio</span>
+                                                </div>
+                                                <div class="preview-crime-item">
+                                                    <input type="checkbox">
+                                                    <span>Agressão</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="preview-results" id="preview-results">
+                                            <h4>Resultados</h4>
+                                            <div class="preview-result-row">
+                                                <span>Tempo:</span>
+                                                <span>20 meses</span>
+                                            </div>
+                                            <div class="preview-result-row">
+                                                <span>Multa:</span>
+                                                <span>R$5.000</span>
+                                            </div>
+                                            <div class="preview-btns">
+                                                <button type="button" class="preview-btn calculate" id="preview-calculate">Calcular</button>
+                                                <button type="button" class="preview-btn reset" id="preview-reset">Limpar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="preview-footer" id="preview-footer">
+                                    <span id="preview-server-name">{{ city_config.server_name if city_config else 'FiveM RP Server' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="preview-info text-center mt-4">
+                            <p class="text-muted">Esta é apenas uma prévia visual. Para ver a calculadora completa, salve as configurações e exporte para HTML.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-actions">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+                
+                {% if city %}
+                <a href="{{ url_for('export_city_html', city_id=city.id) }}" class="btn btn-primary">
+                    <i class="fas fa-download"></i> Exportar para HTML
+                </a>
+                {% endif %}
+                
+                <a href="{{ url_for('list_cities') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Live preview para informações da cidade
+        const nameInput = document.getElementById('name');
+        const logoInput = document.getElementById('logo_url');
+        const descInput = document.getElementById('description');
+        
+        const namePreview = document.getElementById('city-name-preview');
+        const descPreview = document.getElementById('city-desc-preview');
+        const logoPreview = document.getElementById('logo-preview');
+        
+        // Preview de nomes
+        const previewCityName = document.getElementById('preview-city-name');
+        
+        if (nameInput) {
+            nameInput.addEventListener('input', function() {
+                namePreview.textContent = this.value;
+                previewCityName.textContent = this.value;
+            });
+        }
+        
+        if (descInput) {
+            descInput.addEventListener('input', function() {
+                descPreview.textContent = this.value;
+            });
+        }
+        
+        if (logoInput) {
+            logoInput.addEventListener('input', function() {
+                logoPreview.src = this.value || 'https://via.placeholder.com/150x150?text=Logo';
+                
+                // Atualiza o logo na prévia também
+                const previewLogo = document.getElementById('preview-city-logo');
+                if (previewLogo) {
+                    previewLogo.style.backgroundImage = `url('${this.value || 'https://via.placeholder.com/150x150?text=Logo'}')`;
+                }
+            });
+        }
+        
+        // Colorpicker updates
+        const colorPairs = [
+            { color: 'primary_color', text: 'primary_color_text', preview: 'preview-header,preview-navbar,preview-footer', property: 'backgroundColor' },
+            { color: 'secondary_color', text: 'secondary_color_text', preview: 'preview-card', property: 'backgroundColor' },
+            { color: 'accent_color', text: 'accent_color_text', preview: 'preview-btn-primary,preview-calculate', property: 'backgroundColor' },
+            { color: 'success_color', text: 'success_color_text', preview: 'preview-btn-success', property: 'backgroundColor' },
+            { color: 'warning_color', text: 'warning_color_text', preview: 'preview-btn-warning', property: 'backgroundColor' },
+            { color: 'danger_color', text: 'danger_color_text', preview: 'preview-btn-danger,preview-reset', property: 'backgroundColor' }
+        ];
+        
+        colorPairs.forEach(pair => {
+            const colorInput = document.getElementById(pair.color);
+            const textInput = document.getElementById(pair.text);
+            const previewElements = pair.preview.split(',').map(id => document.getElementById(id));
+            
+            if (colorInput && textInput) {
+                // Update text when color changes
+                colorInput.addEventListener('input', function() {
+                    textInput.value = this.value;
+                    previewElements.forEach(el => {
+                        if (el) el.style[pair.property] = this.value;
+                    });
+                });
+                
+                // Update color when text changes
+                textInput.addEventListener('input', function() {
+                    if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                        colorInput.value = this.value;
+                        previewElements.forEach(el => {
+                            if (el) el.style[pair.property] = this.value;
+                        });
+                    }
+                });
+                
+                // Initial update
+                previewElements.forEach(el => {
+                    if (el) el.style[pair.property] = colorInput.value;
+                });
+            }
+        });
+        
+        // Server links preview
+        const serverNameInput = document.getElementById('server_name');
+        const discordUrlInput = document.getElementById('discord_url');
+        const websiteUrlInput = document.getElementById('website_url');
+        const instagramUrlInput = document.getElementById('instagram_url');
+        
+        const previewServerName = document.getElementById('preview-server-name');
+        const previewDiscord = document.getElementById('preview-discord');
+        const previewWebsite = document.getElementById('preview-website');
+        const previewInstagram = document.getElementById('preview-instagram');
+        
+        if (serverNameInput && previewServerName) {
+            serverNameInput.addEventListener('input', function() {
+                previewServerName.textContent = this.value || 'FiveM RP Server';
+            });
+        }
+        
+        if (discordUrlInput && previewDiscord) {
+            discordUrlInput.addEventListener('input', function() {
+                previewDiscord.href = this.value || '#';
+            });
+        }
+        
+        if (websiteUrlInput && previewWebsite) {
+            websiteUrlInput.addEventListener('input', function() {
+                previewWebsite.href = this.value || '#';
+            });
+        }
+        
+        if (instagramUrlInput && previewInstagram) {
+            instagramUrlInput.addEventListener('input', function() {
+                previewInstagram.href = this.value || '#';
+            });
+        }
+        
+        // Initialize preview logo
+        const cityLogoUrl = logoInput ? logoInput.value : '';
+        const previewLogo = document.getElementById('preview-city-logo');
+        if (previewLogo && cityLogoUrl) {
+            previewLogo.style.backgroundImage = `url('${cityLogoUrl || 'https://via.placeholder.com/150x150?text=Logo'}')`;
+        }
+    });
+</script>
+{% endblock %}
