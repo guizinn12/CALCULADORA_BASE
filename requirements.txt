@@ -1,0 +1,8 @@
+bootstrap-flask>=2.5.0
+email-validator>=2.2.0
+flask>=3.1.0
+flask-sqlalchemy>=3.1.1
+fontawesome-free>=5.15.4
+gunicorn>=23.0.0
+psycopg2-binary>=2.9.10
+requests>=2.32.3
